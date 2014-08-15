@@ -7,17 +7,17 @@
 // In this case it is a simple value service.
 angular.module('myApp.services', []).
   factory('dashboardAPIService', function($http) {
-  	var dashboardAPI = {};
+    var dashboardAPI = {};
 
 
-  	dashboardAPI.makeAPIRequest = function(type, limit) {
+    dashboardAPI.makeAPIRequest = function(type, limit) {
       var apiUrl = 'http://www.shareonfb.com/server/';      
       if (type === 'latest') {
-      	apiUrl += 'recent.php?limit=' + limit
+        apiUrl += 'recent.php?limit=' + limit;
       } else if (type === 'popular') {
-      	apiUrl += 'popular.php?limit=' + limit
+        apiUrl += 'popular.php?limit=' + limit;
       } else if (type === 'reported') {
-      	apiUrl += 'banned.php?limit=' + limit
+        apiUrl += 'banned.php?limit=' + limit;
       } else {
         apiUrl += type + '.php?limit=' + limit;
       }
@@ -29,14 +29,14 @@ angular.module('myApp.services', []).
         responseType: 'json',
         url: apiUrl
       });
-  	};
+    };
 
 
-  	return dashboardAPI;
+    return dashboardAPI;
   })
   .service('fetchDataService', ['dashboardAPIService', function(dashboardAPIService, type, limit) {
     this.fetchData = function (type, limit) {
       var posts = [];
       posts = dashboardAPIService.makeAPIRequest(type,limit);
-    }
+    };
   }]);

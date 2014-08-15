@@ -31,19 +31,36 @@ angular.module('myApp.controllers', [])
         $scope.totalHits = totalHits;
       });
 
-    }
+    };
 
   }])
   .controller('mainDataController', function($scope, dashboardAPIService) {
-  	  dashboardAPIService.makeAPIRequest('recent', '40').success(function(response){
-        var totalHits = 0;
-        var data = response.latest;
 
+      $scope.sortOrder = null;
+
+      //Table category headers
+      $scope.tableCategoryHeaders = ['No.', 'Preview', 'Hash', 'Time', 'Headline', 'Hits', 'Author', 'Status', 'Remove'];
+
+      //Default, when controller inits, we wanna show recent 40 posts as the default presentation
+      dashboardAPIService.makeAPIRequest('recent', '40').success(function(response){
+        
+        //Get data and bind to $scope.posts and bind it to $scope.totalHits
+        var data = response.latest;
+        $scope.posts = data;
+
+        //Tally up all the hits to display on the UI
+        var totalHits = 0; 
         angular.forEach(data, function(post, key){
           totalHits += parseInt(post.hits, 10);
         });
 
-        $scope.posts = data;
         $scope.totalHits = totalHits;
+
       });
+
+      //Sort Header
+      $scope.sortHeader = function(header) {
+        $scope.sortOrder = header;
+      };
+
   });

@@ -30,17 +30,25 @@
     <div class="menu-top">
 <!--       <span class="current-location"> Dashboard / {{currentLocation}}</span> -->
       <span class="dashboard-head">Dashboard / {{currentLocation}}</span>
+
       <input type="text" ng-model="searchQuery" placeholder="Search, filter data">
     </div>
 
     <div class="main-content">
       <div>
+      <span class="stats-tab">Posts: {{posts.length}}</span>
+      <span class="stats-tab">Total Hits: {{totalHits | number}}</span>
+
         <table class="table-styled">
           <thead>
-            <tr><th class="text-center">Hash</th><th>Time</th><th>Headline</th><th>Hits ({{totalHits | number}})</th><th>Author</th><th>status</th><th>Remove</th></tr>
+            <tr>
+              <th ng-repeat="categoryHeader in tableCategoryHeaders" ng-click="sortHeader(categoryHeader)">{{categoryHeader}}</th>
+            </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="post in posts | filter: searchQuery">
+            <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder">
+              <td>{{$index+1}}</td>
+              <td><img class="preview-logo" ng-src="{{post.logo}}"></td>
               <td>{{post.hash}}</td>
               <td>{{post.date}}</td>
               <td>{{post.headline}}</td>
