@@ -2,11 +2,11 @@
 <!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js" ng-controller="mainAppController"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
+  <title>{{currentLocation}} | Dashboard</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
@@ -14,20 +14,47 @@
   <link rel="stylesheet" href="css/app.css"/>
   <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
-<body>
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-  </ul>
+<body ng-controller="mainDataController">
 
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
+  <div ng-controller="menuPanelController">
+    <div class="menu-panel">
+      <div class="logo">Welcome</div>
+      <ul class="left-menu">
+        <li ng-repeat="menuItem in menuItems" ng-click="menuClicked(menuItem)" ng-class="{active: menuItem === currentLocation}">{{menuItem}}</li>
+      </ul>
+    </div>
 
+    <div class="menu-top">
+<!--       <span class="current-location"> Dashboard / {{currentLocation}}</span> -->
+      <span class="dashboard-head">Dashboard / {{currentLocation}}</span>
+      <input type="text" ng-model="searchQuery" placeholder="Search, filter data">
+    </div>
+
+    <div class="main-content">
+      <div>
+        <table class="table-styled">
+          <thead>
+            <tr><th class="text-center">Hash</th><th>Time</th><th>Headline</th><th>Hits</th><th>Author</th><th>status</th><th>Remove</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="post in posts | filter: searchQuery">
+              <td>{{post.hash}}</td>
+              <td>{{post.date}}</td>
+              <td>{{post.headline}}</td>
+              <td>{{post.hits}}</td>
+              <td>{{post.author}}({{post.ip}})</td>
+              <td>{{post.banned}}</td>
+              <td><img src="http://i.imgur.com/gPMw7dl.png"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   <div ng-view></div>
-
-  <div>Angular seed app: v<span app-version></span></div>
-
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
