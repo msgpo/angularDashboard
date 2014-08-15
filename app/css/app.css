@@ -4,6 +4,24 @@ body {
   background: #f3f3f3;
 }
 
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+.btn-green {
+  background-color: green;
+}
+
+.strong-bold {
+  font-size: 26px;
+  color: #4861B1;
+  margin-left: 3px;
+}
+
 .menu-panel {
   z-index: 11;
   position: fixed;
@@ -15,6 +33,10 @@ body {
   background-color: #34323a;
 }
 
+.menu-panel a {
+  color: white;
+  text-decoration: none;
+}
 .logo {
   color: white;
   text-align: center;
@@ -78,7 +100,7 @@ input {
   padding: 6px 12px;
   font-size: 14px;
   width: 19%;
-  margin-right: 121px;
+  margin-right: 62px;
   line-height: 1.42857143;
   color: #555;
   background-color: #fff;
@@ -101,6 +123,12 @@ input {
 .table-styled {
   background: white;
   width: 73%;
+  margin-top: 55px;
+}
+
+.table-styled a{
+  text-decoration: none;
+  color: black;
 }
 
 .table-styled thead {
@@ -120,6 +148,8 @@ input {
 .table-styled td {
   border-top: 1px solid #ddd;
   padding: 5px 21px;
+  min-width: 50px;
+  text-align: center;
 }
 
 .preview-logo {
@@ -134,8 +164,27 @@ input {
   width: 100px;
   margin-bottom: 19px;
   margin-right: 5px;
-  padding: 0 10px;
-  font-size: 12px;
+  padding: 20px;
+  font-size: 15px;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+.stats-tab:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.overview-stats {
+  margin-top: 30px;
+}
+
+
+.icon-edit {
+  width: 22px;
+  margin-right: 5px;
+}
+
+.icon-delete {
+  width: 12px;
 }

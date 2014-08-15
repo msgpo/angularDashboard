@@ -10,7 +10,7 @@ angular.module('myApp', [
   'myApp.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  // $routeProvider.when('/', {templateUrl: 'partials/menu-panel.html', controller: 'menuPanelController'});
-  // $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
+  $routeProvider.when('/', {templateUrl: 'partials/mainContent.html', controller: 'menuPanelController'});
+  $routeProvider.when('/Chat', {templateUrl: 'partials/chat.html', controller: 'chatController'});
   $routeProvider.otherwise({redirectTo: '/'});
 }]);

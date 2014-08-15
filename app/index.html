@@ -34,35 +34,13 @@
       <input type="text" ng-model="searchQuery" placeholder="Search, filter data">
     </div>
 
-    <div class="main-content">
-      <div>
-      <span class="stats-tab">Posts: {{posts.length}}</span>
-      <span class="stats-tab">Total Hits: {{totalHits | number}}</span>
 
-        <table class="table-styled">
-          <thead>
-            <tr>
-              <th ng-repeat="categoryHeader in tableCategoryHeaders" ng-click="sortHeader(categoryHeader)">{{categoryHeader}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder">
-              <td>{{$index+1}}</td>
-              <td><img class="preview-logo" ng-src="{{post.logo}}"></td>
-              <td>{{post.hash}}</td>
-              <td>{{post.date}}</td>
-              <td>{{post.headline}}</td>
-              <td>{{post.hits}}</td>
-              <td>{{post.author}} ({{post.ip}})</td>
-              <td>{{post.banned}}</td>
-              <td><img src="http://i.imgur.com/gPMw7dl.png"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div ng-view>
   </div>
-  <div ng-view></div>
+
+  <div class="main-content chat" ng-show="isChat">
+    <script id="sid0020000067801507648">(function() {function async_load(){s.id="cid0020000067801507648";s.src=(window.location.href.indexOf('file:///') > -1 ? 'http:' : '') + '//st.chatango.com/js/gz/emb.js';s.style.cssText="width:653px;height:350px;";s.async=true;s.text='{"handle":"shareonfb","arch":"js","styles":{"a":"000000","b":100,"c":"FFFFFF","d":"FFFFFF","k":"000000","l":"000000","m":"000000","n":"FFFFFF","q":"000000","r":100,"cnrs":"0.35"}}';var ss = document.getElementsByTagName('script');for (var i=0, l=ss.length; i < l; i++){if (ss[i].id=='sid0020000067801507648'){ss[i].id +='_';ss[i].parentNode.insertBefore(s, ss[i]);break;}}}var s=document.createElement('script');if (s.async==undefined){if (window.addEventListener) {addEventListener('load',async_load,false);}else if (window.attachEvent) {attachEvent('onload',async_load);}}else {async_load();}})();</script>
+  </div>
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->

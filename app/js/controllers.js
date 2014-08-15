@@ -12,10 +12,16 @@ angular.module('myApp.controllers', [])
     $scope.totalHits = 0;
   }])
   .controller('menuPanelController', ['$scope', 'dashboardAPIService', function($scope, dashboardAPIService) {
-    $scope.menuItems = ['Create', 'Popular', 'Latest', 'Flagged'];
+    $scope.menuItems = ['Create', 'Popular', 'Latest', 'Flagged', 'Chat'];
 
     $scope.menuClicked = function(menuItem) {
       $scope.currentLocation = menuItem;
+      $scope.isChat = false;
+
+      if (menuItem === 'Chat') {
+        $scope.isChat = true;
+      }
+
       var type = menuItem.toLowerCase();
       var limit = '40';
 
@@ -39,7 +45,7 @@ angular.module('myApp.controllers', [])
       $scope.sortOrder = null;
 
       //Table category headers
-      $scope.tableCategoryHeaders = ['No.', 'Preview', 'Hash', 'Time', 'Headline', 'Hits', 'Author', 'Status', 'Remove'];
+      $scope.tableCategoryHeaders = ['No.', 'Preview', 'Hash', 'Time', 'Headline', 'Hits', 'Author', 'Status', 'Actions'];
 
       //Default, when controller inits, we wanna show recent 40 posts as the default presentation
       dashboardAPIService.makeAPIRequest('recent', '40').success(function(response){
@@ -51,7 +57,15 @@ angular.module('myApp.controllers', [])
         //Tally up all the hits to display on the UI
         var totalHits = 0; 
         angular.forEach(data, function(post, key){
+          //total Hits
           totalHits += parseInt(post.hits, 10);
+
+          //Status Parsing: 0 = alive, 1=banned
+          if (post.banned === '0') {
+            post.banned = 'active';
+          } else {
+            post.banned = 'banned';
+          }
         });
 
         $scope.totalHits = totalHits;
@@ -61,6 +75,38 @@ angular.module('myApp.controllers', [])
       //Sort Header
       $scope.sortHeader = function(header) {
         $scope.sortOrder = header;
+      };
+
+      //RefreshData
+      $scope.refreshData = function(hash) {
+
+        var type = $scope.currentLocation.toLowerCase();
+        var limit = prompt('how many entries do you want?');
+
+        //this should be modularized and make reusable.
+        dashboardAPIService.makeAPIRequest('recent', limit).success(function(response){
+          
+          //Get data and bind to $scope.posts and bind it to $scope.totalHits
+          var data = response.latest;
+          $scope.posts = data;
+
+          //Tally up all the hits to display on the UI
+          var totalHits = 0; 
+          angular.forEach(data, function(post, key){
+            //total Hits
+            totalHits += parseInt(post.hits, 10);
+
+            //Status Parsing: 0 = alive, 1=banned
+            if (post.banned === '0') {
+              post.banned = 'active';
+            } else {
+              post.banned = 'banned';
+            }
+          });
+
+          $scope.totalHits = totalHits;
+
+        });
       };
 
   });
