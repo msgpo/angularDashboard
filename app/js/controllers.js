@@ -8,6 +8,8 @@ angular.module('myApp.controllers', [])
     $scope.type = 'recent';
     $scope.limit = '40';
     $scope.posts = [];
+
+    $scope.totalHits = 0;
   }])
   .controller('menuPanelController', ['$scope', 'dashboardAPIService', function($scope, dashboardAPIService) {
     $scope.menuItems = ['Create', 'Popular', 'Latest', 'Flagged'];
@@ -18,7 +20,15 @@ angular.module('myApp.controllers', [])
       var limit = '40';
 
       dashboardAPIService.makeAPIRequest(type, limit).success(function(response){
-        $scope.posts = response.latest;
+        var totalHits = 0;
+        var data = response.latest;
+
+        angular.forEach(data, function(post, key){
+          totalHits += parseInt(post.hits, 10);
+        });
+
+        $scope.posts = data;
+        $scope.totalHits = totalHits;
       });
 
     }
@@ -26,6 +36,14 @@ angular.module('myApp.controllers', [])
   }])
   .controller('mainDataController', function($scope, dashboardAPIService) {
   	  dashboardAPIService.makeAPIRequest('recent', '40').success(function(response){
-        $scope.posts = response.latest;
+        var totalHits = 0;
+        var data = response.latest;
+
+        angular.forEach(data, function(post, key){
+          totalHits += parseInt(post.hits, 10);
+        });
+
+        $scope.posts = data;
+        $scope.totalHits = totalHits;
       });
   });

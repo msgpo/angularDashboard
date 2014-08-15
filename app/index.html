@@ -37,7 +37,7 @@
       <div>
         <table class="table-styled">
           <thead>
-            <tr><th class="text-center">Hash</th><th>Time</th><th>Headline</th><th>Hits</th><th>Author</th><th>status</th><th>Remove</th></tr>
+            <tr><th class="text-center">Hash</th><th>Time</th><th>Headline</th><th>Hits ({{totalHits | number}})</th><th>Author</th><th>status</th><th>Remove</th></tr>
           </thead>
           <tbody>
             <tr ng-repeat="post in posts | filter: searchQuery">
@@ -45,7 +45,7 @@
               <td>{{post.date}}</td>
               <td>{{post.headline}}</td>
               <td>{{post.hits}}</td>
-              <td>{{post.author}}({{post.ip}})</td>
+              <td>{{post.author}} ({{post.ip}})</td>
               <td>{{post.banned}}</td>
               <td><img src="http://i.imgur.com/gPMw7dl.png"></td>
             </tr>
