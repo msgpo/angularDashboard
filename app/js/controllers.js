@@ -12,7 +12,7 @@ angular.module('myApp.controllers', [])
     $scope.totalHits = 0;
   }])
   .controller('menuPanelController', ['$scope', 'dashboardAPIService', function($scope, dashboardAPIService) {
-    $scope.menuItems = ['Create', 'Popular', 'Latest', 'Flagged', 'Chat'];
+    $scope.menuItems = ['Create', 'Popular', 'Latest', 'Flagged', 'Chat', 'Preferences'];
 
     $scope.menuClicked = function(menuItem) {
       $scope.currentLocation = menuItem;
@@ -31,6 +31,13 @@ angular.module('myApp.controllers', [])
 
         angular.forEach(data, function(post, key){
           totalHits += parseInt(post.hits, 10);
+
+          //Status Parsing: 0 = alive, 1=banned
+          if (post.banned === '0') {
+            post.banned = 'active';
+          } else {
+            post.banned = 'banned';
+          }
         });
 
         $scope.posts = data;
@@ -45,7 +52,7 @@ angular.module('myApp.controllers', [])
       $scope.sortOrder = null;
 
       //Table category headers
-      $scope.tableCategoryHeaders = ['No.', 'Preview', 'Hash', 'Time', 'Headline', 'Hits', 'Author', 'Status', 'Actions'];
+      $scope.tableCategoryHeaders = ['No.', 'Preview', 'Hash', 'Time', 'Headline', 'Hits', 'Author', 'Status', 'Actions', 'Error'];
 
       //Default, when controller inits, we wanna show recent 40 posts as the default presentation
       dashboardAPIService.makeAPIRequest('recent', '40').success(function(response){
@@ -66,6 +73,14 @@ angular.module('myApp.controllers', [])
           } else {
             post.banned = 'banned';
           }
+
+          //image processing, wrong file extension
+          if (post.logo.indexOf('.png') === -1 && post.logo.indexOf('.jpg') === -1 && post.logo.indexOf('.gif') === -1) {
+            post.logo = 'http://placehold.it/50x37';
+            post.error = 'Bad image';
+          }
+
+
         });
 
         $scope.totalHits = totalHits;

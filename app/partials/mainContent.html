@@ -20,9 +20,10 @@
               <td>{{post.date}}</td>
               <td>{{post.headline}}</td>
               <td>{{post.hits}}</td>
-              <td>{{post.author}} ({{post.ip}})</td>
+              <td><i ng-if="post.author">{{post.author}} ({{post.ip}})<i></td>
               <td ng-class="{red: post.banned === 'banned', green: post.banned === 'active'}">{{post.banned}}</td>
               <td><img class="icon-delete" src="http://i.imgur.com/gPMw7dl.png"><img class="icon-edit" src="http://i.imgur.com/UWPKFzL.png"></td>
+              <td><i ng-if="post.error">{{post.error}}<i></td>
             </tr>
           </tbody>
         </table>
