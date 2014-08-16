@@ -13,17 +13,32 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder" ng-click="navigatePost(post.hash)">
-              <td>{{$index+1}}</td>
-              <td><img class="preview-logo" ng-src="{{post.logo}}"></td>
-              <td><a href="/{{post.hash}}" target="_blank">{{post.hash}}</a></td>
-              <td>{{post.date}}</td>
-              <td>{{post.headline}}</td>
-              <td>{{post.hits}}</td>
-              <td><i ng-if="post.author">{{post.author}} ({{post.ip}})<i></td>
-              <td ng-class="{red: post.banned === 'banned', green: post.banned === 'active'}">{{post.banned}}</td>
-              <td><img class="icon-delete" src="http://i.imgur.com/gPMw7dl.png"><img class="icon-edit" src="http://i.imgur.com/UWPKFzL.png"></td>
-              <td><i ng-if="post.error">{{post.error}}<i></td>
+            <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder" ng-click="navigatePost(post.hash)" <span ng-show="!isFlagged">
+                <td>{{$index+1}}</td>
+                <td><img class="preview-logo" ng-src="{{post.logo}}"></td>
+                <td><a href="/{{post.hash}}" target="_blank">{{post.hash}}</a></td>
+                <td>{{post.date}}</td>
+                <td>{{post.headline}}</td>
+                <td>{{post.hits}}</td>
+                <td><i ng-if="post.author">{{post.author}} ({{post.ip}})<i></td>
+                <td ng-class="{red: post.banned === 'banned', green: post.banned === 'active'}" ng-click="toggleStatus(post)">{{post.banned}}</td>
+                <td>
+                  <img class="icon-delete" ng-src="http://i.imgur.com/gPMw7dl.png" ng-click="deletePost(post)">
+                  <img class="icon-edit" ng-src="http://i.imgur.com/UWPKFzL.png">
+                </td>
+                <td><i ng-if="post.error">{{post.error}}<i></td>
+            </tr>
+
+            <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder" ng-click="navigatePost(post.hash)" <span ng-show="isFlagged">  
+              <span ng-show="isFlagged">
+                <td>{{$index+1}}</td>
+                <td><a href="/{{post.hash}}" target="_blank">{{post.hash}}</a></td>
+                <td>{{post.date}}</td>
+                <td>{{post.name}}</td>
+                <td>{{post.email}}</td>
+                <td>{{post.reason}}</td>
+                <td><img class="icon-delete" ng-src="http://i.imgur.com/gPMw7dl.png"></td>
+              </span>
             </tr>
           </tbody>
         </table>

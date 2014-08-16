@@ -10,6 +10,10 @@ angular.module('myApp.controllers', [])
     $scope.posts = [];
 
     $scope.totalHits = 0;
+
+    //Table category headers
+    $scope.defaultTableHeaders = ['No.', 'Preview', 'Hash', 'Time', 'Headline', 'Hits', 'Author', 'Status', 'Actions', 'Error'];
+
   }])
   .controller('menuPanelController', ['$scope', 'dashboardAPIService', function($scope, dashboardAPIService) {
     $scope.menuItems = ['Create', 'Popular', 'Latest', 'Flagged', 'Chat', 'Preferences'];
@@ -17,27 +21,47 @@ angular.module('myApp.controllers', [])
     $scope.menuClicked = function(menuItem) {
       $scope.currentLocation = menuItem;
       $scope.isChat = false;
+      $scope.isFlagged = false;
+      $scope.tableCategoryHeaders = $scope.defaultTableHeaders;
 
       if (menuItem === 'Chat') {
         $scope.isChat = true;
       }
 
-      var type = menuItem.toLowerCase();
-      var limit = '40';
+      if (menuItem === 'Flagged') {
+        //Table category headers
+        $scope.tableCategoryHeaders = ['No.', 'hash', 'date', 'name', 'email', 'reason', 'Flag'];
+        $scope.isFlagged = true;
+      }
 
-      dashboardAPIService.makeAPIRequest(type, limit).success(function(response){
+      var type = menuItem.toLowerCase();
+      var options = {
+        limit: '40'
+      };
+
+      dashboardAPIService.makeAPIRequest(type, options).success(function(response){
         var totalHits = 0;
         var data = response.latest;
 
         angular.forEach(data, function(post, key){
-          totalHits += parseInt(post.hits, 10);
 
-          //Status Parsing: 0 = alive, 1=banned
-          if (post.banned === '0') {
-            post.banned = 'active';
-          } else {
-            post.banned = 'banned';
+          if (menuItem !== 'Flagged') {
+            totalHits += parseInt(post.hits, 10);
+
+            //Status Parsing: 0 = alive, 1=banned
+            if (post.banned === '0') {
+              post.banned = 'active';
+            } else {
+              post.banned = 'banned';
+            }
+
+            //image processing, wrong file extension
+            if (post.logo.indexOf('.png') === -1 && post.logo.indexOf('.jpg') === -1 && post.logo.indexOf('.gif') === -1) {
+              post.logo = 'http://placehold.it/50x37';
+              post.error = 'Bad image';
+            }
           }
+
         });
 
         $scope.posts = data;
@@ -50,12 +74,12 @@ angular.module('myApp.controllers', [])
   .controller('mainDataController', function($scope, dashboardAPIService) {
 
       $scope.sortOrder = null;
-
-      //Table category headers
-      $scope.tableCategoryHeaders = ['No.', 'Preview', 'Hash', 'Time', 'Headline', 'Hits', 'Author', 'Status', 'Actions', 'Error'];
+      var options = {
+        limit: '40'
+      };
 
       //Default, when controller inits, we wanna show recent 40 posts as the default presentation
-      dashboardAPIService.makeAPIRequest('recent', '40').success(function(response){
+      dashboardAPIService.makeAPIRequest('recent', options).success(function(response){
         
         //Get data and bind to $scope.posts and bind it to $scope.totalHits
         var data = response.latest;
@@ -96,10 +120,12 @@ angular.module('myApp.controllers', [])
       $scope.refreshData = function(hash) {
 
         var type = $scope.currentLocation.toLowerCase();
-        var limit = prompt('how many entries do you want?');
 
+        var options = {
+          limit: prompt('how many entries do you want?')
+        }
         //this should be modularized and make reusable.
-        dashboardAPIService.makeAPIRequest('recent', limit).success(function(response){
+        dashboardAPIService.makeAPIRequest('recent', options).success(function(response){
           
           //Get data and bind to $scope.posts and bind it to $scope.totalHits
           var data = response.latest;
@@ -122,6 +148,32 @@ angular.module('myApp.controllers', [])
           $scope.totalHits = totalHits;
 
         });
+      }; //makeAPIRequest
+
+      //toggle Status
+      $scope.toggleStatus = function(post) {
+        var options = {
+          hash: post.hash,
+          status: post.banned
+        };
+
+        dashboardAPIService.makeAPIRequest('setflagged', options).success(function(response){
+          post.banned = response.post[0].status;
+          console.log(response);
+        }); //makeAPIRequest
+      };
+
+      //Delete post
+      $scope.deletePost = function(post) {
+        var options = {
+          hash: post.hash
+        };
+
+        var index = $scope.posts.indexOf(post);    
+        $scope.posts.splice(index, 1); 
+        dashboardAPIService.makeAPIRequest('delete', options).success(function(response){
+          
+        }); //makeAPIRequest
       };
 
   });
