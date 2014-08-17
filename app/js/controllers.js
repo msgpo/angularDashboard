@@ -24,6 +24,11 @@ angular.module('myApp.controllers', [])
       $scope.isFlagged = false;
       $scope.tableCategoryHeaders = $scope.defaultTableHeaders;
 
+      //overview doesnt really fall into any
+      if (menuItem === 'Overview') {
+        return;
+      }
+
       if (menuItem === 'Chat') {
         $scope.isChat = true;
       }
@@ -143,11 +148,33 @@ angular.module('myApp.controllers', [])
 
   })
   .controller('reportController', function ($scope, dashboardAPIService) {
+
+    //Users Online
+    $scope.usersOnline = 0;
     
+    dashboardAPIService.makeAPIRequest('usersOnline').success(function(response){
+      $scope.usersOnline = response.online;
+    }).then(function(response){
+      //Callback, set to true when we have data and render to the page
+      $scope.fetchUsersOnlineDone = true;
+    }); //makeAPIRequest    
+
+    //visits today
+    $scope.visits = 0;
+    
+    dashboardAPIService.makeAPIRequest('visits').success(function(response){
+      console.log(response);
+      $scope.visits = response.visitor;
+    }).then(function(response){
+      //Callback, set to true when we have data and render to the page
+      $scope.fetchVisitsDone = true;
+    }); //makeAPIRequest 
+
     var options = {
       dateRange: 30 
     };
 
+    //Reporting Chart
     dashboardAPIService.makeAPIRequest('report', options).success(function(response){
       //Cache this var
       var items = response.report;
@@ -162,6 +189,10 @@ angular.module('myApp.controllers', [])
         plotDataItemCount.push(parseInt(item.count, 10));
         hitCount.push(parseInt(item.hits,10));
       });
+
+      $scope.lineDataOptions = {
+        pointHitDetectionRadius: 1
+      };
 
       $scope.lineData = {
         labels: plotLabels,
@@ -184,6 +215,8 @@ angular.module('myApp.controllers', [])
       //Callback, set to true when we have data and render to the page
       $scope.fetchReportDone = true;
     }); //makeAPIRequest
+
+
 
 
   })

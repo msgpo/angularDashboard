@@ -1,10 +1,15 @@
 <div class="main-content">
   <div ng-controller="reportController">
+
+    <div class="overview-stats">
+      <span class="stats-tab" ng-if="fetchUsersOnlineDone" >Users Online: <span class="strong-bold">{{usersOnline}}</span></span>
+      <span class="stats-tab" ng-if="fetchVisitsDone" >Visits Today: <span class="strong-bold">{{visits}}</span></span>
+    </div>
     <h2>Activity: Hits Last 30 days</h2>
-    <cjs-line dataset="lineData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone"></cjs-line>
+    <cjs-line dataset="lineData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone" options="lineDataOptions"></cjs-line>
 
     <h2>Activity: Submission Last 30 days</h2>
-    <cjs-bar dataset="barData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone"></cjs-bar>
+    <cjs-bar dataset="barData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone" options="barDataOptions"></cjs-bar>
   </div>
 
 

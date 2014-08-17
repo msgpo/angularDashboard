@@ -11,6 +11,7 @@ angular.module('myApp.services', []).
 
 
     dashboardAPI.makeAPIRequest = function(type, options) {
+      options = options || {};
       var apiUrl = 'http://www.shareonfb.com/server/';   
       var limit = options.limit;
       var method = 'GET';
@@ -32,6 +33,10 @@ angular.module('myApp.services', []).
         apiUrl += 'setflagged.php?hash=' + hash + '&postStatus=' + postStatus;
       } else if (type === 'report') {
         apiUrl += 'report.php' + '?dateRange='+ dateRange;
+      } else if (type === 'usersOnline') {
+        apiUrl += 'userOnlineCount.php';
+      } else if (type === 'visits') {
+        apiUrl += 'visitorStats.php';
       } else {
         apiUrl += type + '.php?limit=' + limit;
       }
