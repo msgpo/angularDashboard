@@ -166,8 +166,8 @@ angular.module('myApp.controllers', [])
       $scope.lineData = {
         labels: plotLabels,
         datasets: [ {
-            fillColor: "rgba(151,187,205,0.5)",
-            strokeColor: "rgba(151,187,205,1)",
+            fillColor: "rgba(59,204,158,0.5)",
+            strokeColor: "rgba(59,204,158,1)",
             data: hitCount
         }]
       };
@@ -175,8 +175,8 @@ angular.module('myApp.controllers', [])
       $scope.barData = {
         labels: plotLabels,
         datasets: [{
-            fillColor: "rgba(151,187,205,0.5)",
-            strokeColor: "rgba(151,187,205,1)",
+            fillColor: "rgba(59,204,158,0.5)",
+            strokeColor: "rgba(59,204,158,1)",
             data: plotDataItemCount
         }]
       };

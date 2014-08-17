@@ -17,10 +17,10 @@ body {
 }
 
 .strong-bold {
-  font-size: 26px;
-  color: #4861B1;
+  font-size: 23px;
+  color: #48B15D;
   margin-left: 3px;
-}
+  }
 
 .menu-panel {
   z-index: 11;
@@ -53,8 +53,8 @@ body {
 
 .dashboard-head {
   font-weight: bold;
-  text-transform: uppercase;
   font-size: 31px;
+  color: #817D7D;
 }
 
 ul.left-menu {
@@ -63,24 +63,12 @@ ul.left-menu {
   margin-top: 0;
 }
 
-/*ul.left-menu li {
-  position: relative;
-  margin: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 40px 0 40px 0px;
-  background: #34323a;
-  font-size: 19px;
-  color: #aeb2b7;
-  text-align: center;
-  cursor: pointer
-}*/
-
 ul.left-menu a {
   position: relative;
   display: block;
   margin: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 40px 0 40px 0px;
+  padding: 30px 0 30px 0px;
   background: #34323a;
   font-size: 19px;
   color: #aeb2b7;
@@ -160,8 +148,7 @@ input {
 
 .table-styled td {
   border-top: 1px solid #ddd;
-  padding: 5px 21px;
-  min-width: 50px;
+  padding: 5px 10px;
   text-align: center;
 }
 
@@ -177,7 +164,7 @@ input {
   width: 100px;
   margin-bottom: 19px;
   margin-right: 5px;
-  padding: 20px;
+  padding: 10px;
   font-size: 15px;
   font-weight: bold;
   text-transform: uppercase;
