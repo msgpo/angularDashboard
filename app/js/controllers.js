@@ -4,7 +4,7 @@
 
 angular.module('myApp.controllers', [])
   .controller('mainAppController',['$scope', function($scope) {
-    $scope.currentLocation = 'Latest';
+    $scope.currentLocation = 'Overview';
     $scope.type = 'recent';
     $scope.limit = '40';
     $scope.posts = [];
@@ -16,7 +16,7 @@ angular.module('myApp.controllers', [])
 
   }])
   .controller('menuPanelController', ['$scope', 'dashboardAPIService', function($scope, dashboardAPIService) {
-    $scope.menuItems = ['Create', 'Popular', 'Latest', 'Flagged', 'Chat', 'Preferences'];
+    $scope.menuItems = ['Overview', 'Popular', 'Latest', 'Flagged', 'Chat', 'Preferences'];
 
     $scope.menuClicked = function(menuItem) {
       $scope.currentLocation = menuItem;
@@ -116,41 +116,7 @@ angular.module('myApp.controllers', [])
         $scope.sortOrder = header;
       };
 
-      //RefreshData
-      $scope.refreshData = function(hash) {
-
-        var type = $scope.currentLocation.toLowerCase();
-
-        var options = {
-          limit: prompt('how many entries do you want?')
-        }
-        //this should be modularized and make reusable.
-        dashboardAPIService.makeAPIRequest('recent', options).success(function(response){
-          
-          //Get data and bind to $scope.posts and bind it to $scope.totalHits
-          var data = response.latest;
-          $scope.posts = data;
-
-          //Tally up all the hits to display on the UI
-          var totalHits = 0; 
-          angular.forEach(data, function(post, key){
-            //total Hits
-            totalHits += parseInt(post.hits, 10);
-
-            //Status Parsing: 0 = alive, 1=banned
-            if (post.banned === '0') {
-              post.banned = 'active';
-            } else {
-              post.banned = 'banned';
-            }
-          });
-
-          $scope.totalHits = totalHits;
-
-        });
-      }; //makeAPIRequest
-
-      //toggle Status
+      //toggle banned Status
       $scope.toggleStatus = function(post) {
         var options = {
           hash: post.hash,
@@ -159,7 +125,6 @@ angular.module('myApp.controllers', [])
 
         dashboardAPIService.makeAPIRequest('setflagged', options).success(function(response){
           post.banned = response.post[0].status;
-          console.log(response);
         }); //makeAPIRequest
       };
 
@@ -172,8 +137,56 @@ angular.module('myApp.controllers', [])
         var index = $scope.posts.indexOf(post);    
         $scope.posts.splice(index, 1); 
         dashboardAPIService.makeAPIRequest('delete', options).success(function(response){
-          
+
         }); //makeAPIRequest
       };
 
+  })
+  .controller('reportController', function ($scope, dashboardAPIService) {
+    
+    var options = {
+      dateRange: 30 
+    };
+
+    dashboardAPIService.makeAPIRequest('report', options).success(function(response){
+      //Cache this var
+      var items = response.report;
+
+      //Process necessary graph data
+      var plotLabels = [];
+      var plotDataItemCount = [];
+      var hitCount = [];
+
+      angular.forEach(items, function(item){
+        plotLabels.push(item.day.replace('2014-', ''));
+        plotDataItemCount.push(parseInt(item.count, 10));
+        hitCount.push(parseInt(item.hits,10));
+      });
+
+      $scope.lineData = {
+        labels: plotLabels,
+        datasets: [ {
+            fillColor: "rgba(151,187,205,0.5)",
+            strokeColor: "rgba(151,187,205,1)",
+            data: hitCount
+        }]
+      };
+
+      $scope.barData = {
+        labels: plotLabels,
+        datasets: [{
+            fillColor: "rgba(151,187,205,0.5)",
+            strokeColor: "rgba(151,187,205,1)",
+            data: plotDataItemCount
+        }]
+      };
+    }).then(function(response){
+      //Callback, set to true when we have data and render to the page
+      $scope.fetchReportDone = true;
+    }); //makeAPIRequest
+
+
+  })
+  .controller('overviewController', function($scope) {
+    $scope.title = 'overview';
   });

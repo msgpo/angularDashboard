@@ -1,0 +1,11 @@
+<div class="main-content">
+  <div ng-controller="reportController">
+    <h2>Activity: Hits Last 30 days</h2>
+    <cjs-line dataset="lineData" autofit="true" responsive="true" width="950" height="300" ng-if="fetchReportDone"></cjs-line>
+
+    <h2>Activity: Submission Last 30 days</h2>
+    <cjs-bar dataset="barData" autofit="true" responsive="true" width="950" height="300" ng-if="fetchReportDone"></cjs-bar>
+  </div>
+
+
+</div>

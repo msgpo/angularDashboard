@@ -28,7 +28,7 @@ body {
   top: 0px;
   bottom: 0;
   left: 0;
-  width: 220px;
+  width: 190px;
   padding: 0;
   background-color: #34323a;
 }
@@ -63,8 +63,21 @@ ul.left-menu {
   margin-top: 0;
 }
 
-ul.left-menu li{
+/*ul.left-menu li {
   position: relative;
+  margin: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 40px 0 40px 0px;
+  background: #34323a;
+  font-size: 19px;
+  color: #aeb2b7;
+  text-align: center;
+  cursor: pointer
+}*/
+
+ul.left-menu a {
+  position: relative;
+  display: block;
   margin: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding: 40px 0 40px 0px;
@@ -75,7 +88,7 @@ ul.left-menu li{
   cursor: pointer
 }
 
-ul.left-menu li:hover{
+ul.left-menu a:hover{
   transition: all 0.15s ease-in-out;
   background: black;
 }
@@ -99,8 +112,8 @@ input {
   height: 23px;
   padding: 6px 12px;
   font-size: 14px;
-  width: 19%;
-  margin-right: 62px;
+  width: 14%;
+  margin-right: 232px;
   line-height: 1.42857143;
   color: #555;
   background-color: #fff;
@@ -116,14 +129,14 @@ input {
 
 .main-content {
   position: relative;
-  left: 261px;
-  top: 107px;
+  left: 210px;
+  top: 90px;
 }
 
 .table-styled {
   background: white;
-  width: 73%;
-  margin-top: 55px;
+  width: 68%;
+  margin-top: 30px;
 }
 
 .table-styled a{

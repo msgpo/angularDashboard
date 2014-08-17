@@ -1,0 +1,26 @@
+  <div class="main-content" ng-hide="isChat">
+      <div class="overview-stats">
+        <span class="stats-tab">Posts: <span class="strong-bold">{{posts.length}}</span></span>
+        <span class="stats-tab">Total Hits: <span class="strong-bold">{{totalHits | number}}</span></span>
+      </div>
+
+      <table class="table-styled">
+        <thead>
+          <tr>
+            <th ng-repeat="categoryHeader in tableCategoryHeaders" ng-click="sortHeader(categoryHeader)">{{categoryHeader}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder" ng-click="navigatePost(post.hash)">  
+            <td>{{$index+1}}</td>
+            <td><a href="/{{post.hash}}" target="_blank">{{post.hash}}</a></td>
+            <td>{{post.date}}</td>
+            <td>{{post.name}}</td>
+            <td>{{post.email}}</td>
+            <td>{{post.reason}}</td>
+            <td><img class="icon-delete" ng-src="http://i.imgur.com/gPMw7dl.png" ng-click="deletePost(post)"></td>
+          </tr>
+        </tbody>
+      </table>
+
+  </div>

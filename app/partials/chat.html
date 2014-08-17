@@ -1,0 +1,23 @@
+SELECT `date` FROM `pranks` WHERE date BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
+
+SELECT COUNT(*), DATE(date) FROM pranks WHERE BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
+
+This would get the amount for each day in may 2009.
+SELECT *, count(*) as MyCount, min(date) as MinDate  FROM pranks WHERE date BETWEEN NOW() - INTERVAL 30 DAY AND NOW() Group by Year(date), Month(date)
+
+SELECT *, count(*) as MyCount, min(date) as MinDate  FROM pranks WHERE date BETWEEN NOW() - INTERVAL 30 DAY AND NOW() Group by Year(date), Month(date)
+
+select
+  date(a.date) as `DisplayTime`,
+  ifnull(l.TCount,0) as TCount
+from pranks as a 
+  left join (select
+           count(id) as TCount,
+           date
+         from pranks
+         WHERE date(a.date) BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
+         group by DATE(date)) as l
+    on date(a.date) = date(l.date)
+
+group by DATE(a.date)
+ORDER BY DisplayTime ASC

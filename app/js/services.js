@@ -18,6 +18,7 @@ angular.module('myApp.services', []).
       //For status toggle
       var hash = options.hash;
       var postStatus = options.status;
+      var dateRange = options.dateRange
 
       if (type === 'latest') {
         apiUrl += 'recent.php?limit=' + limit;
@@ -29,6 +30,8 @@ angular.module('myApp.services', []).
         apiUrl += 'delete.php?hash=' + hash;
       } else if (type === 'setflagged') {
         apiUrl += 'setflagged.php?hash=' + hash + '&postStatus=' + postStatus;
+      } else if (type === 'report') {
+        apiUrl += 'report.php' + '?dateRange='+ dateRange;
       } else {
         apiUrl += type + '.php?limit=' + limit;
       }
@@ -41,7 +44,6 @@ angular.module('myApp.services', []).
         url: apiUrl
       });
     };
-
 
     return dashboardAPI;
   });
