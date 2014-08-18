@@ -147,77 +147,132 @@ angular.module('myApp.controllers', [])
       };
 
   })
-  .controller('reportController', function ($scope, dashboardAPIService) {
+  .controller('reportController', function ($scope, dashboardAPIService, $interval, $window) {
+    
+    //how often to refresh dashboard, todo: make this a config
+    var refreshInterval = 60000;
 
+    //========================================
     //Users Online
+    //========================================
     $scope.usersOnline = 0;
-    
-    dashboardAPIService.makeAPIRequest('usersOnline').success(function(response){
-      $scope.usersOnline = response.online;
-    }).then(function(response){
-      //Callback, set to true when we have data and render to the page
-      $scope.fetchUsersOnlineDone = true;
-    }); //makeAPIRequest    
+    $scope.refreshUsersOnline = function(){
 
-    //visits today
-    $scope.visits = 0;
-    
-    dashboardAPIService.makeAPIRequest('visits').success(function(response){
-      console.log(response);
-      $scope.visits = response.visitor;
-    }).then(function(response){
-      //Callback, set to true when we have data and render to the page
-      $scope.fetchVisitsDone = true;
-    }); //makeAPIRequest 
+      dashboardAPIService.makeAPIRequest('usersOnline').success(function(response){
+        $scope.usersOnline = response.online;
 
-    var options = {
-      dateRange: 30 
+         $window.document.title = '(' + $scope.usersOnline + ') ' + $scope.currentLocation;
+      }).then(function(response){
+        //Callback, set to true when we have data and render to the page
+        $scope.fetchUsersOnlineDone = true;
+      }); //makeAPIRequest
     };
 
+    //every 30 seconds count users online
+    $interval($scope.refreshUsersOnline, refreshInterval); 
+    $scope.refreshUsersOnline();
+
+
+    //========================================
+    //Visits Today
+    //========================================
+    $scope.visits = 0;
+    $scope.refreshVisitCount = function() {
+      dashboardAPIService.makeAPIRequest('visits').success(function(response){
+        $scope.visits = response.visitor;
+      }).then(function(response){
+        //Callback, set to true when we have data and render to the page
+        $scope.fetchVisitsDone = true;
+      }); //makeAPIRequest 
+    };
+
+    //every 30 seconds count users online
+    $interval($scope.refreshVisitCount, refreshInterval); 
+    $scope.refreshVisitCount();
+
+    //========================================
+    //OverallStats
+    //========================================
+    $scope.totalPranks = 0;
+    $scope.totalHits = 0;
+
+    $scope.refreshVisitCount = function() {
+      dashboardAPIService.makeAPIRequest('overallStats').success(function(response){
+        $scope.totalPranks = response.totalPranks;
+        $scope.totalHits = response.totalHits;
+      }).then(function(response){
+        //Callback, set to true when we have data and render to the page
+        $scope.overallStatsDone = true;
+      }); //makeAPIRequest 
+    };
+
+    //every 30 seconds count users online
+    $interval($scope.refreshVisitCount, refreshInterval); 
+    $scope.refreshVisitCount();
+
+
+    //========================================
     //Reporting Chart
-    dashboardAPIService.makeAPIRequest('report', options).success(function(response){
-      //Cache this var
-      var items = response.report;
+    //========================================
+    $scope.dateRange = 7;
+    $scope.options = {
+      dateRange: $scope.dateRange 
+    };
 
-      //Process necessary graph data
-      var plotLabels = [];
-      var plotDataItemCount = [];
-      var hitCount = [];
+    $scope.graphReports = function() {
+      dashboardAPIService.makeAPIRequest('report', $scope.options).success(function(response){
+        console.log('report', $scope.options);
+        //Cache this var
+        var items = response.report;
 
-      angular.forEach(items, function(item){
-        plotLabels.push(item.day.replace('2014-', ''));
-        plotDataItemCount.push(parseInt(item.count, 10));
-        hitCount.push(parseInt(item.hits,10));
-      });
+        //Process necessary graph data
+        var plotLabels = [];
+        var plotDataItemCount = [];
+        var hitCount = [];
 
-      $scope.lineDataOptions = {
-        pointHitDetectionRadius: 1
-      };
+        //reverse them in order
+        items.reverse();
 
-      $scope.lineData = {
-        labels: plotLabels,
-        datasets: [ {
-            fillColor: "rgba(59,204,158,0.5)",
-            strokeColor: "rgba(59,204,158,1)",
-            data: hitCount
-        }]
-      };
+        angular.forEach(items, function(item){
+          plotLabels.push(item.day.replace('2014-', ''));
+          plotDataItemCount.push(parseInt(item.count, 10));
+          hitCount.push(parseInt(item.hits,10));
+        });
 
-      $scope.barData = {
-        labels: plotLabels,
-        datasets: [{
-            fillColor: "rgba(59,204,158,0.5)",
-            strokeColor: "rgba(59,204,158,1)",
-            data: plotDataItemCount
-        }]
-      };
-    }).then(function(response){
-      //Callback, set to true when we have data and render to the page
-      $scope.fetchReportDone = true;
-    }); //makeAPIRequest
+        $scope.lineDataOptions = {
+          pointHitDetectionRadius: 1
+        };
 
+        $scope.lineData = {
+          labels: plotLabels,
+          datasets: [ {
+              fillColor: "rgba(28, 125, 231, 0.5)",
+              strokeColor: "rgba(78, 156, 241, 1)",
+              data: hitCount
+          }]
+        };
 
+        $scope.barData = {
+          labels: plotLabels,
+          datasets: [{
+              fillColor: "rgba(28, 125, 231, 0.5)",
+              strokeColor: "rgba(78, 156, 241, 1)",
+              data: plotDataItemCount
+          }]
+        };
+      }).then(function(response){
+        //Callback, set to true when we have data and render to the page
+        $scope.fetchReportDone = true;
+      }); //makeAPIRequest
+    }
 
+    $scope.graphReports();
+
+    $scope.filterDateRange = function(range) {
+      $scope.fetchReportDone = false;
+      $scope.options.dateRange = range;
+      $scope.graphReports();
+    };
 
   })
   .controller('overviewController', function($scope) {

@@ -4,6 +4,10 @@ body {
   background: #f3f3f3;
 }
 
+.white {
+  background: white;
+}
+
 .red {
   color: red;
 }
@@ -117,8 +121,8 @@ input {
 
 .main-content {
   position: relative;
-  left: 210px;
-  top: 90px;
+  padding-left: 210px;
+  padding-top: 90px;
 }
 
 .table-styled {
@@ -187,4 +191,47 @@ input {
 
 .icon-delete {
   width: 12px;
+}
+
+.stats-tab-vertical-first {
+  border-left: solid 1px #E7E7E7;
+}
+
+.stats-tab-vertical {
+  text-align: center;
+  width: 200px;
+  display: inline-block;
+  margin-right: 10px;
+  border-right: solid 1px #E7E7E7;
+}
+
+.stats-tab-number {
+  font-size: 50px;
+  font-weight: bold;
+  color: rgba(100, 100, 100, 1);
+}
+
+.stats-tab-label {
+  color: #B6B5B5;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.graph-label {
+  margin-top: 29px;
+  margin-bottom: 2px;
+  font-weight: bold;
+  color: rgba(100, 100, 100, 1);
+}
+
+.graph-filter {
+  font-weight: bold;
+  color: rgba(100, 100, 100, 1);
+  font-size: 13px;
+  margin-bottom: 13px;
+}
+
+.filter-item:hover {
+  text-decoration: underline;
+  cursor: pointer
 }

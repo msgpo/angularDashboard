@@ -20,7 +20,7 @@ angular.module('myApp.services', []).
       var hash = options.hash;
       var postStatus = options.status;
       var dateRange = options.dateRange
-
+      
       if (type === 'latest') {
         apiUrl += 'recent.php?limit=' + limit;
       } else if (type === 'popular') {
@@ -37,6 +37,8 @@ angular.module('myApp.services', []).
         apiUrl += 'userOnlineCount.php';
       } else if (type === 'visits') {
         apiUrl += 'visitorStats.php';
+      } else if (type === 'overallStats') {
+        apiUrl += 'overallStats.php';
       } else {
         apiUrl += type + '.php?limit=' + limit;
       }

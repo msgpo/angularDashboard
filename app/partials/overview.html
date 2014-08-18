@@ -1,15 +1,42 @@
-<div class="main-content">
+<div class="main-content" ng-class="{white: currentLocation === 'Overview'}">
   <div ng-controller="reportController">
 
     <div class="overview-stats">
-      <span class="stats-tab" ng-if="fetchUsersOnlineDone" >Users Online: <span class="strong-bold">{{usersOnline}}</span></span>
-      <span class="stats-tab" ng-if="fetchVisitsDone" >Visits Today: <span class="strong-bold">{{visits}}</span></span>
-    </div>
-    <h2>Activity: Hits Last 30 days</h2>
-    <cjs-line dataset="lineData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone" options="lineDataOptions"></cjs-line>
+      <div class="stats-tab-vertical stats-tab-vertical-first" ng-if="fetchUsersOnlineDone">
+        <div class="stats-tab-number">{{usersOnline | number}}</div>
+        <div class="stats-tab-label">Users Online</div>
+      </div>
 
-    <h2>Activity: Submission Last 30 days</h2>
-    <cjs-bar dataset="barData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone" options="barDataOptions"></cjs-bar>
+      <div class="stats-tab-vertical" ng-if="fetchVisitsDone">
+        <div class="stats-tab-number">{{visits | number}}</div>
+        <div class="stats-tab-label">Visits Today</div>
+      </div>
+
+      <div class="stats-tab-vertical" ng-if="overallStatsDone">
+        <div class="stats-tab-number">{{totalPranks | number}}</div>
+        <div class="stats-tab-label">Total Pranks</div>
+      </div>
+
+      <div class="stats-tab-vertical" ng-if="overallStatsDone">
+        <div class="stats-tab-number">{{totalHits | number}}</div>
+        <div class="stats-tab-label">Total Hits</div>
+      </div>
+
+<!--       <span class="stats-tab" ng-if="fetchUsersOnlineDone">Users Online: <span class="strong-bold">{{usersOnline}}</span></span>
+      <span class="stats-tab" ng-if="fetchVisitsDone" >Visits Today: <span class="strong-bold">{{visits}}</span></span> -->
+    </div>
+
+    <div class="chart">
+      <h2 class="graph-label">Activity: Hits Last {{dateRange}} days</h2>
+      <div class="graph-filter"><u>Filter</u>: <i class="filter-item" ng-click="filterDateRange(7)">7</i> | <i class="filter-item" ng-click="filterDateRange(14)">14</i> | <i class="filter-item" ng-click="filterDateRange(30)">30</i></div>
+      <cjs-line dataset="lineData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone" options="lineDataOptions"></cjs-line>
+    </div>
+
+    <div class="chart">
+      <h2 class="graph-label">Activity: Submission Last {{dateRange}} days</h2>
+      <div class="graph-filter"><u>Filter</u>: <i class="filter-item" ng-click="filterDateRange(7)">7</i> | <i class="filter-item" ng-click="filterDateRange(14)">14</i> | <i class="filter-item" ng-click="filterDateRange(30)">30</i></div>
+      <cjs-bar dataset="barData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone" options="barDataOptions"></cjs-bar>
+    </div>
   </div>
 
 
