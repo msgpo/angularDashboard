@@ -33,7 +33,7 @@
     </div>
 
     <div class="chart">
-      <h2 class="graph-label">Activity: Submission Last {{dateRange}} days</h2>
+      <h2 class="graph-label">Activity: Submissions Last {{dateRange}} days</h2>
       <div class="graph-filter"><u>Filter</u>: <i class="filter-item" ng-click="filterDateRange(7)">7</i> | <i class="filter-item" ng-click="filterDateRange(14)">14</i> | <i class="filter-item" ng-click="filterDateRange(30)">30</i></div>
       <cjs-bar dataset="barData" autofit="true" responsive="true" width="850" height="300" ng-if="fetchReportDone" options="barDataOptions"></cjs-bar>
     </div>

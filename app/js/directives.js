@@ -4,8 +4,24 @@
 
 
 angular.module('myApp.directives', []).
-  directive('appVersion', ['version', function(version) {
-    return function(scope, elm, attrs) {
-      elm.text(version);
-    };
+  directive('contenteditable', ['$sce', function($sce) {
+    return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ctrl) {
+      // view -> model
+      element.bind('blur', function() {
+        scope.$apply(function() {
+          ctrl.$setViewValue(element.html());
+        });
+      });
+
+      // model -> view
+      ctrl.$render = function() {
+        element.html(ctrl.$viewValue);
+      };
+
+      // load init value from DOM
+      ctrl.$render();
+    }
+  };
   }]);

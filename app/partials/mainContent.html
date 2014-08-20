@@ -1,32 +1,52 @@
-  <div class="main-content" ng-hide="isChat">
-      <div class="overview-stats">
-        <span class="stats-tab">Posts: <span class="strong-bold">{{posts.length}}</span></span>
-        <span class="stats-tab">Total Hits: <span class="strong-bold">{{totalHits | number}}</span></span>
-      </div>
+<div class="overlay" ng-show="editPost === true">
+  <span class="close-edit" ng-click="editPost=false">X</span>
+    <div id="prank-preview">
+        <div class="preview-content">
+            <div id="preview-logo">
+                <img class="edit-logo" ng-src="{{currentEditPost.logo}}">
+            </div>
+            <div id="preview-content-area">
+                <h3 id="preview-headline" contenteditable ng-model="currentEditPost.headline">{{currentEditPost.headline}}</h3>
+                <p id="preview-description" contenteditable ng-model="currentEditPost.description">{{currentEditPost.description}}</p>
+            </div>
+        </div>
+    </div>
+    <form novalidate class="simple-form" class="edit-fields">
+      <span class="form-label">Logo:<u ng-click="currentEditPost.logo = 'http://i.imgur.com/32BCxpY.jpg'">Fix</u></span> <input type="text" class="editInput" ng-model="currentEditPost.logo" /><br />
+      <span class="form-label">Reveal:<u ng-click="currentEditPost.reveal = 'http://i.imgur.com/wvvfpxv.png'">Fix</u></span> <input type="text" class="editInput" ng-model="currentEditPost.reveal" /><br />
+      <button class="editButtons" ng-click="editSave(currentEditPost)">SAVE</button>
+    </form>
+</div>
 
-      <table class="table-styled">
-        <thead>
-          <tr>
-            <th ng-repeat="categoryHeader in tableCategoryHeaders" ng-click="sortHeader(categoryHeader)">{{categoryHeader}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder" ng-click="navigatePost(post.hash)">
-              <td>{{$index+1}}</td>
-              <td><img class="preview-logo" ng-src="{{post.logo}}"></td>
-              <td><a href="/{{post.hash}}" target="_blank">{{post.hash}}</a></td>
-              <td>{{post.date}}</td>
-              <td>{{post.headline}}</td>
-              <td>{{post.hits}}</td>
-              <td><i ng-if="post.author">{{post.author}} ({{post.ip}})<i></td>
-              <td ng-class="{red: post.banned === 'banned', green: post.banned === 'active'}" ng-click="toggleStatus(post)">{{post.banned}}</td>
-              <td>
-                <img class="icon-delete" ng-src="http://i.imgur.com/gPMw7dl.png" ng-click="deletePost(post)">
-                <img class="icon-edit" ng-src="http://i.imgur.com/UWPKFzL.png">
-              </td>
-              <td><i ng-if="post.error">{{post.error}}<i></td>
-          </tr>
-        </tbody>
-      </table>
+<div class="main-content" ng-hide="isChat" ng-class="{lightOpacity: editPost === true}">
+    <div class="overview-stats">
+      <span class="stats-tab">Posts: <span class="strong-bold">{{posts.length}}</span></span>
+      <span class="stats-tab">Total Hits: <span class="strong-bold">{{totalHits | number}}</span></span>
+    </div>
 
-  </div>
+    <table class="table-styled">
+      <thead>
+        <tr>
+          <th ng-repeat="categoryHeader in tableCategoryHeaders" ng-click="sortHeader(categoryHeader)">{{categoryHeader}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder" ng-click="edit(post, $index)">
+            <td>{{$index+1}}</td>
+            <td><img class="preview-logo" ng-src="{{post.logo}}"></td>
+            <td><a href="/{{post.hash}}" target="_blank">{{post.hash}}</a></td>
+            <td>{{post.date}}</td>
+            <td>{{post.headline}}</td>
+            <td>{{post.hits}}</td>
+            <td><i ng-if="post.author">{{post.author}} ({{post.ip}})<i></td>
+            <td ng-class="{red: post.banned === 'banned', green: post.banned === 'active'}" ng-click="toggleStatus(post)">{{post.banned}}</td>
+            <td>
+              <img class="icon-delete" ng-src="http://i.imgur.com/gPMw7dl.png" ng-click="deletePost(post)">
+              <img class="icon-edit" ng-src="http://i.imgur.com/UWPKFzL.png" ng-click="edit(post, $index)">
+            </td>
+            <td><i ng-if="post.error">{{post.error}}[<u ng-click="fixBadImage(post)">Fix</u>]<i></td>
+        </tr>
+      </tbody>
+    </table>
+
+</div>

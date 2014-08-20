@@ -20,7 +20,12 @@ angular.module('myApp.services', []).
       var hash = options.hash;
       var postStatus = options.status;
       var dateRange = options.dateRange
-      
+
+      var logo = options.logo;
+      var headline = options.headline;
+      var description = options.description;
+      var reveal = options.reveal;
+      console.log(options);
       if (type === 'latest') {
         apiUrl += 'recent.php?limit=' + limit;
       } else if (type === 'popular') {
@@ -39,6 +44,10 @@ angular.module('myApp.services', []).
         apiUrl += 'visitorStats.php';
       } else if (type === 'overallStats') {
         apiUrl += 'overallStats.php';
+      } else if (type === 'fixThumbnail') {
+        apiUrl += 'update.php?hash=' + hash;
+      } else if (type === 'update') {
+        apiUrl += 'update.php?hash=' + hash + '&logo=' + logo  + '&headline=' + headline + '&description=' + description + '&reveal=' + reveal;
       } else {
         apiUrl += type + '.php?limit=' + limit;
       }

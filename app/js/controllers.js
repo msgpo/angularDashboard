@@ -5,26 +5,21 @@
 angular.module('myApp.controllers', [])
   .controller('mainAppController',['$scope', function($scope) {
     $scope.currentLocation = 'Overview';
-    $scope.type = 'recent';
-    $scope.limit = '40';
-    $scope.posts = [];
-
-    $scope.totalHits = 0;
-
     //Table category headers
     $scope.defaultTableHeaders = ['No.', 'Preview', 'Hash', 'Time', 'Headline', 'Hits', 'Author', 'Status', 'Actions', 'Error'];
 
   }])
-  .controller('menuPanelController', ['$scope', 'dashboardAPIService', function($scope, dashboardAPIService) {
+  .controller('mainContentController', ['$scope', 'dashboardAPIService', function($scope, dashboardAPIService) {
     $scope.menuItems = ['Overview', 'Popular', 'Latest', 'Flagged', 'Chat', 'Preferences'];
+
 
     $scope.menuClicked = function(menuItem) {
       $scope.currentLocation = menuItem;
       $scope.isChat = false;
-      $scope.isFlagged = false;
       $scope.tableCategoryHeaders = $scope.defaultTableHeaders;
 
-      //overview doesnt really fall into any
+      //overview doesnt really fall into any api call
+      //todo: it should
       if (menuItem === 'Overview') {
         return;
       }
@@ -36,7 +31,6 @@ angular.module('myApp.controllers', [])
       if (menuItem === 'Flagged') {
         //Table category headers
         $scope.tableCategoryHeaders = ['No.', 'hash', 'date', 'name', 'email', 'reason', 'Flag'];
-        $scope.isFlagged = true;
       }
 
       var type = menuItem.toLowerCase();
@@ -75,78 +69,65 @@ angular.module('myApp.controllers', [])
 
     };
 
-  }])
-  .controller('mainDataController', function($scope, dashboardAPIService) {
+    //Sort Header, todo
+    $scope.sortHeader = function(header) {
+      $scope.sortOrder = header;
+    };
 
-      $scope.sortOrder = null;
+    //toggle banned Status
+    $scope.toggleStatus = function(post) {
       var options = {
-        limit: '40'
+        hash: post.hash,
+        status: post.banned
       };
 
-      //Default, when controller inits, we wanna show recent 40 posts as the default presentation
-      dashboardAPIService.makeAPIRequest('recent', options).success(function(response){
-        
-        //Get data and bind to $scope.posts and bind it to $scope.totalHits
-        var data = response.latest;
-        $scope.posts = data;
+      dashboardAPIService.makeAPIRequest('setflagged', options).success(function(response){
+        post.banned = response.post[0].status;
+      }); //makeAPIRequest
+    };
 
-        //Tally up all the hits to display on the UI
-        var totalHits = 0; 
-        angular.forEach(data, function(post, key){
-          //total Hits
-          totalHits += parseInt(post.hits, 10);
-
-          //Status Parsing: 0 = alive, 1=banned
-          if (post.banned === '0') {
-            post.banned = 'active';
-          } else {
-            post.banned = 'banned';
-          }
-
-          //image processing, wrong file extension
-          if (post.logo.indexOf('.png') === -1 && post.logo.indexOf('.jpg') === -1 && post.logo.indexOf('.gif') === -1) {
-            post.logo = 'http://placehold.it/50x37';
-            post.error = 'Bad image';
-          }
-
-
-        });
-
-        $scope.totalHits = totalHits;
-
-      });
-
-      //Sort Header
-      $scope.sortHeader = function(header) {
-        $scope.sortOrder = header;
+    //Delete post
+    $scope.deletePost = function(post) {
+      var options = {
+        hash: post.hash
       };
 
-      //toggle banned Status
-      $scope.toggleStatus = function(post) {
-        var options = {
-          hash: post.hash,
-          status: post.banned
-        };
+      var index = $scope.posts.indexOf(post);    
+      $scope.posts.splice(index, 1); 
+      dashboardAPIService.makeAPIRequest('delete', options).success(function(response){
 
-        dashboardAPIService.makeAPIRequest('setflagged', options).success(function(response){
-          post.banned = response.post[0].status;
-        }); //makeAPIRequest
-      };
+      }); //makeAPIRequest
+    };
 
-      //Delete post
-      $scope.deletePost = function(post) {
-        var options = {
-          hash: post.hash
-        };
+    $scope.currentEditPost;
 
-        var index = $scope.posts.indexOf(post);    
-        $scope.posts.splice(index, 1); 
-        dashboardAPIService.makeAPIRequest('delete', options).success(function(response){
+    $scope.edit = function(post, index) {
+      $scope.currentEditPost = post;
+      $scope.currentEditPost.index = index;
+      $scope.editPost = true;
+    }
 
-        }); //makeAPIRequest
-      };
+    $scope.editSave = function(post) {
+      var index = post.index;
+      $scope.posts[index] = post;
+      
+      var options = {
+        hash: post.hash,
+        logo: post.logo,
+        headline: post.headline,
+        description: post.description,
+        reveal: post.reveal
+      }
 
-  })
+      dashboardAPIService.makeAPIRequest('update', options).success(function(response){
+
+      }).then(function(response) {
+        $scope.editPost = false;
+      }); //makeAPIRequest
+
+    }
+
+  }])
   .controller('reportController', function ($scope, dashboardAPIService, $interval, $window) {
     
     //how often to refresh dashboard, todo: make this a config
@@ -221,7 +202,6 @@ angular.module('myApp.controllers', [])
 
     $scope.graphReports = function() {
       dashboardAPIService.makeAPIRequest('report', $scope.options).success(function(response){
-        console.log('report', $scope.options);
         //Cache this var
         var items = response.report;
 

@@ -13,10 +13,10 @@ angular.module('myApp', [
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {templateUrl: 'partials/overview.html', controller: 'overviewController'});
   $routeProvider.when('/Overview', {templateUrl: 'partials/overview.html', controller: 'overviewController'});
-  $routeProvider.when('/Popular', {templateUrl: 'partials/mainContent.html', controller: 'menuPanelController'});
-  $routeProvider.when('/Latest', {templateUrl: 'partials/mainContent.html', controller: 'menuPanelController'});
-  $routeProvider.when('/Flagged', {templateUrl: 'partials/flagged.html', controller: 'menuPanelController'});
-  $routeProvider.when('/Chat', {templateUrl: 'partials/chat.html', controller: 'menuPanelController'});
-  $routeProvider.when('/Preferences', {templateUrl: 'partials/preferences.html', controller: 'menuPanelController'});
+  $routeProvider.when('/Popular', {templateUrl: 'partials/mainContent.html', controller: 'mainContentController'});
+  $routeProvider.when('/Latest', {templateUrl: 'partials/mainContent.html', controller: 'mainContentController'});
+  $routeProvider.when('/Flagged', {templateUrl: 'partials/flagged.html', controller: 'mainContentController'});
+  $routeProvider.when('/Chat', {templateUrl: 'partials/chat.html', controller: 'mainContentController'});
+  $routeProvider.when('/Preferences', {templateUrl: 'partials/preferences.html', controller: 'mainContentController'});
   $routeProvider.otherwise({redirectTo: '/'});
 }]);
