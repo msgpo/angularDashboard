@@ -12,16 +12,22 @@
         </div>
     </div>
     <form novalidate class="simple-form" class="edit-fields">
-      <span class="form-label">Logo:<u ng-click="currentEditPost.logo = 'http://i.imgur.com/32BCxpY.jpg'">Fix</u></span> <input type="text" class="editInput" ng-model="currentEditPost.logo" /><br />
-      <span class="form-label">Reveal:<u ng-click="currentEditPost.reveal = 'http://i.imgur.com/wvvfpxv.png'">Fix</u></span> <input type="text" class="editInput" ng-model="currentEditPost.reveal" /><br />
+      <span class="form-label">Logo:<u ng-click="replaceLogo()">Fix</u></span> <input type="text" class="editInput" ng-model="currentEditPost.logo" /><br />
+      <span class="form-label">Reveal:<u ng-click="replaceReveal()">Fix</u></span> <input type="text" class="editInput" ng-model="currentEditPost.reveal" /><br />
       <button class="editButtons" ng-click="editSave(currentEditPost)">SAVE</button>
     </form>
 </div>
 
-<div class="main-content" ng-hide="isChat" ng-class="{lightOpacity: editPost === true}">
+<div class="main-content" ng-class="{lightOpacity: editPost === true}">
     <div class="overview-stats">
-      <span class="stats-tab">Posts: <span class="strong-bold">{{posts.length}}</span></span>
-      <span class="stats-tab">Total Hits: <span class="strong-bold">{{totalHits | number}}</span></span>
+      <div class="stats-tab-vertical stats-tab-vertical-first">
+        <div class="stats-tab-number">{{posts.length |number}}</div>
+        <div class="stats-tab-label">Posts</div>
+      </div>
+      <div class="stats-tab-vertical">
+        <div class="stats-tab-number">{{totalHits | number}}</div>
+        <div class="stats-tab-label">Total Hits</div>
+      </div>
     </div>
 
     <table class="table-styled">
@@ -44,7 +50,7 @@
               <img class="icon-delete" ng-src="http://i.imgur.com/gPMw7dl.png" ng-click="deletePost(post)">
               <img class="icon-edit" ng-src="http://i.imgur.com/UWPKFzL.png" ng-click="edit(post, $index)">
             </td>
-            <td><i ng-if="post.error">{{post.error}}[<u ng-click="fixBadImage(post)">Fix</u>]<i></td>
+            <td><i ng-if="post.error">{{post.error}}</td>
         </tr>
       </tbody>
     </table>

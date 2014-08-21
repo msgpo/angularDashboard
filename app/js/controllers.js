@@ -10,12 +10,11 @@ angular.module('myApp.controllers', [])
 
   }])
   .controller('mainContentController', ['$scope', 'dashboardAPIService', function($scope, dashboardAPIService) {
-    $scope.menuItems = ['Overview', 'Popular', 'Latest', 'Flagged', 'Chat', 'Preferences'];
+    $scope.menuItems = ['Overview', 'Popular', 'Latest', 'Flagged', 'Comments', 'Preferences'];
 
 
     $scope.menuClicked = function(menuItem) {
       $scope.currentLocation = menuItem;
-      $scope.isChat = false;
       $scope.tableCategoryHeaders = $scope.defaultTableHeaders;
 
       //overview doesnt really fall into any api call
@@ -24,13 +23,13 @@ angular.module('myApp.controllers', [])
         return;
       }
 
-      if (menuItem === 'Chat') {
-        $scope.isChat = true;
-      }
-
       if (menuItem === 'Flagged') {
         //Table category headers
         $scope.tableCategoryHeaders = ['No.', 'hash', 'date', 'name', 'email', 'reason', 'Flag'];
+      }
+
+      if (menuItem === 'Comments') {
+        $scope.tableCategoryHeaders = ['No.', 'hash', 'logo', 'date', 'name', 'comment', 'headline', 'delete'];
       }
 
       var type = menuItem.toLowerCase();
@@ -42,9 +41,14 @@ angular.module('myApp.controllers', [])
         var totalHits = 0;
         var data = response.latest;
 
+        //todo this can't be response.latest at all times, need to standarize api
+        if (type === 'comments') {
+          data = response.comments;
+        }
+
         angular.forEach(data, function(post, key){
 
-          if (menuItem !== 'Flagged') {
+          if (menuItem !== 'Flagged' && menuItem !== 'Comments') {
             totalHits += parseInt(post.hits, 10);
 
             //Status Parsing: 0 = alive, 1=banned
@@ -56,13 +60,12 @@ angular.module('myApp.controllers', [])
 
             //image processing, wrong file extension
             if (post.logo.indexOf('.png') === -1 && post.logo.indexOf('.jpg') === -1 && post.logo.indexOf('.gif') === -1) {
-              post.logo = 'http://placehold.it/50x37';
               post.error = 'Bad image';
             }
           }
 
         });
-
+console.log(data);
         $scope.posts = data;
         $scope.totalHits = totalHits;
       });
@@ -92,10 +95,21 @@ angular.module('myApp.controllers', [])
         hash: post.hash
       };
 
-      var index = $scope.posts.indexOf(post);    
-      $scope.posts.splice(index, 1); 
       dashboardAPIService.makeAPIRequest('delete', options).success(function(response){
+        var index = $scope.posts.indexOf(post);    
+        $scope.posts.splice(index, 1); 
+      }); //makeAPIRequest
+    };
 
+    //Delete Comment
+    $scope.deleteComment = function(post) {
+      var options = {
+        hash: post.hash
+      };
+
+      dashboardAPIService.makeAPIRequest('deleteComment', options).success(function(response){
+        var index = $scope.posts.indexOf(post);    
+        $scope.posts.splice(index, 1); 
       }); //makeAPIRequest
     };
 
@@ -109,6 +123,7 @@ angular.module('myApp.controllers', [])
 
     $scope.editSave = function(post) {
       var index = post.index;
+      post.error = null;
       $scope.posts[index] = post;
       
       var options = {
@@ -122,9 +137,18 @@ angular.module('myApp.controllers', [])
       dashboardAPIService.makeAPIRequest('update', options).success(function(response){
 
       }).then(function(response) {
+
         $scope.editPost = false;
       }); //makeAPIRequest
+    }
 
+    $scope.replaceLogo = function() {
+      $scope.currentEditPost.logo = 'http://i.imgur.com/32BCxpY.jpg';
+      $scope.currentEditPost.error = null;
+    }
+
+    $scope.replaceReveal = function() {
+      $scope.currentEditPost.reveal = 'http://i.imgur.com/wvvfpxv.png';
     }
 
   }])
@@ -141,11 +165,10 @@ angular.module('myApp.controllers', [])
 
       dashboardAPIService.makeAPIRequest('usersOnline').success(function(response){
         $scope.usersOnline = response.online;
-
-         $window.document.title = '(' + $scope.usersOnline + ') ' + $scope.currentLocation;
       }).then(function(response){
         //Callback, set to true when we have data and render to the page
         $scope.fetchUsersOnlineDone = true;
+        $window.document.title = '(' + $scope.usersOnline + ') ' + $scope.currentLocation;
       }); //makeAPIRequest
     };
 

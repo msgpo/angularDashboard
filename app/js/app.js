@@ -16,7 +16,7 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/Popular', {templateUrl: 'partials/mainContent.html', controller: 'mainContentController'});
   $routeProvider.when('/Latest', {templateUrl: 'partials/mainContent.html', controller: 'mainContentController'});
   $routeProvider.when('/Flagged', {templateUrl: 'partials/flagged.html', controller: 'mainContentController'});
-  $routeProvider.when('/Chat', {templateUrl: 'partials/chat.html', controller: 'mainContentController'});
+  $routeProvider.when('/Comments', {templateUrl: 'partials/comments.html', controller: 'mainContentController'});
   $routeProvider.when('/Preferences', {templateUrl: 'partials/preferences.html', controller: 'mainContentController'});
   $routeProvider.otherwise({redirectTo: '/'});
 }]);

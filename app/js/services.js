@@ -25,7 +25,7 @@ angular.module('myApp.services', []).
       var headline = options.headline;
       var description = options.description;
       var reveal = options.reveal;
-      console.log(options);
+
       if (type === 'latest') {
         apiUrl += 'recent.php?limit=' + limit;
       } else if (type === 'popular') {
@@ -48,6 +48,10 @@ angular.module('myApp.services', []).
         apiUrl += 'update.php?hash=' + hash;
       } else if (type === 'update') {
         apiUrl += 'update.php?hash=' + hash + '&logo=' + logo  + '&headline=' + headline + '&description=' + description + '&reveal=' + reveal;
+      } else if (type === 'comments') {
+        apiUrl += 'comment.php?type=fetchList';
+      } else if (type === 'deleteComment') {
+        apiUrl += 'comment.php?type=delete&hash=' + hash;
       } else {
         apiUrl += type + '.php?limit=' + limit;
       }
