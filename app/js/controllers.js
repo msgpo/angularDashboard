@@ -65,7 +65,7 @@ angular.module('myApp.controllers', [])
           }
 
         });
-console.log(data);
+
         $scope.posts = data;
         $scope.totalHits = totalHits;
       });
@@ -227,14 +227,25 @@ console.log(data);
       dashboardAPIService.makeAPIRequest('report', $scope.options).success(function(response){
         //Cache this var
         var items = response.report;
+        var pageViews = response.pageviews;
 
         //Process necessary graph data
         var plotLabels = [];
         var plotDataItemCount = [];
         var hitCount = [];
 
+        //Process pageview data
+        var pageViewPlotLabels = [];
+        var pageViewVisitCount = [];
+
         //reverse them in order
         items.reverse();
+        pageViews.reverse();
+
+        angular.forEach(pageViews, function(pageView){
+          pageViewPlotLabels.push(pageView.date);
+          pageViewVisitCount.push(parseInt(pageView.visits,10));
+        });
 
         angular.forEach(items, function(item){
           plotLabels.push(item.day.replace('2014-', ''));
@@ -242,6 +253,21 @@ console.log(data);
           hitCount.push(parseInt(item.hits,10));
         });
 
+        //pageview line graph
+        $scope.pageviewGraphOptions = {
+          bezierCurve : false
+        };
+
+        $scope.pageviewGraph = {
+          labels: pageViewPlotLabels,
+          datasets: [ {
+              fillColor: "rgba(28, 125, 231, 0)",
+              strokeColor: "rgba(78, 156, 241, 1)",
+              data: pageViewVisitCount
+          }]
+        };
+
+        //hits graph
         $scope.lineDataOptions = {
           pointHitDetectionRadius: 1
         };
@@ -255,6 +281,7 @@ console.log(data);
           }]
         };
 
+        //item count graph
         $scope.barData = {
           labels: plotLabels,
           datasets: [{

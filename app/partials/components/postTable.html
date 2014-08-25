@@ -1,0 +1,24 @@
+<table class="table-styled">
+  <thead>
+    <tr>
+      <th ng-repeat="categoryHeader in tableCategoryHeaders" ng-click="sortHeader(categoryHeader)">{{categoryHeader}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="post in posts | filter: searchQuery | orderBy: sortOrder">
+        <td>{{$index+1}}</td>
+        <td><img class="preview-logo" ng-src="{{post.logo}}"></td>
+        <td><a href="/{{post.hash}}" target="_blank">{{post.hash}}</a></td>
+        <td>{{post.date}}</td>
+        <td>{{post.headline}}</td>
+        <td>{{post.hits}}</td>
+        <td><i ng-if="post.author">{{post.author}} ({{post.ip}})<i></td>
+        <td ng-class="{red: post.banned === 'banned', green: post.banned === 'active'}" ng-click="toggleStatus(post)">{{post.banned}}</td>
+        <td>
+          <img class="icon-delete" ng-src="http://i.imgur.com/gPMw7dl.png" ng-click="deletePost(post)">
+          <img class="icon-edit" ng-src="http://i.imgur.com/UWPKFzL.png" ng-click="edit(post, $index)">
+        </td>
+        <td><i ng-if="post.error">{{post.error}}</td>
+    </tr>
+  </tbody>
+</table>
